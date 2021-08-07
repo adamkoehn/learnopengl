@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <string>
 
 #include "../graphics/Cube.h"
@@ -21,6 +22,17 @@ namespace Manager
         void loop();
         bool isReady() { return glfwInit_ == GLFW_TRUE && glewInit_ == GLEW_OK && window_ != NULL; }
 
+        bool firstMouse;
+        float cameraSpeed;
+        float mouseX;
+        float mouseY;
+        float yaw;
+        float pitch;
+        glm::vec3 cameraPos;
+        glm::vec3 cameraFront;
+        glm::vec3 cameraRight;
+        glm::vec3 cameraUp;
+
     private:
         Window();
         ~Window();
@@ -30,10 +42,6 @@ namespace Manager
         GLFWwindow *window_ = NULL;
         int glfwInit_;
         GLenum glewInit_;
-        float cameraSpeed;
-        glm::vec3 cameraPos;
-        glm::vec3 cameraFront;
-        glm::vec3 cameraUp;
     };
 
 }

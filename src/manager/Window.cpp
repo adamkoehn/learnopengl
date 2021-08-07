@@ -9,6 +9,46 @@ namespace Manager
             glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
 
+    static void mouseMove(GLFWwindow *window, double xpos, double ypos)
+    {
+        Window *win = Window::instance();
+
+        if (win->firstMouse)
+        {
+            win->mouseX = xpos;
+            win->mouseY = ypos;
+            win->firstMouse = false;
+        }
+
+        const float sensitivity = 0.1f;
+        glm::vec3 direction;
+        float xoff;
+        float yoff;
+
+        xoff = xpos - win->mouseX;
+        yoff = win->mouseY - ypos;
+        win->mouseX = xpos;
+        win->mouseY = ypos;
+
+        xoff *= sensitivity;
+        yoff *= sensitivity;
+
+        win->yaw += xoff;
+        win->pitch += yoff;
+
+        if (win->pitch > 89.0f)
+            win->pitch = 89.0f;
+        if (win->pitch < -89.0f)
+            win->pitch = -89.0f;
+
+        direction = glm::vec3(
+            cos(glm::radians(win->yaw)) * cos(glm::radians(win->pitch)),
+            sin(glm::radians(win->pitch)),
+            sin(glm::radians(win->yaw)) * cos(glm::radians(win->pitch)));
+
+        win->cameraFront = glm::normalize(direction);
+    }
+
     static void sizeChange(GLFWwindow *window, int width, int height)
     {
         glViewport(0, 0, width, height);
@@ -18,6 +58,12 @@ namespace Manager
 
     Window::Window()
     {
+        firstMouse = true;
+        mouseX = 0;
+        mouseY = 0;
+        pitch = 0.0f;
+        yaw = -90.0f;
+
         glfwInit_ = glfwInit();
         if (glfwInit_ == GLFW_TRUE)
         {
@@ -34,6 +80,7 @@ namespace Manager
                 {
                     glViewport(0, 0, 800, 600);
                     glfwSetKeyCallback(window_, keyPress);
+                    glfwSetCursorPosCallback(window_, mouseMove);
                     glfwSetFramebufferSizeCallback(window_, sizeChange);
                     glfwSwapInterval(1);
                     glEnable(GL_DEPTH_TEST);
@@ -92,7 +139,7 @@ namespace Manager
         unsigned int uProjection;
 
         cameraSpeed = 2.5f;
-        cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+        cameraPos = glm::vec3(0.0f, 0.0f, 0.0f);
         cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
         cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -112,7 +159,7 @@ namespace Manager
         glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
         glm::vec3 cubePositions[] = {
-            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, -4.0f),
             glm::vec3(2.0f, 5.0f, -15.0f),
             glm::vec3(-1.5f, -2.2f, -2.5f),
             glm::vec3(-3.8f, -2.0f, -12.3f),
