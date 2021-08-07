@@ -24,11 +24,11 @@ namespace Manager
             glfwWindowHint(GLFW_VERSION_MAJOR, 4);
             glfwWindowHint(GLFW_VERSION_MINOR, 6);
             // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-            glfwSwapInterval(1);
             window_ = glfwCreateWindow(800, 600, "tutorial", NULL, NULL);
             if (window_)
             {
                 glfwMakeContextCurrent(window_);
+                glfwSwapInterval(1);
 
                 glewInit_ = glewInit();
                 if (glewInit_ == GLEW_OK)
@@ -39,17 +39,17 @@ namespace Manager
                 }
                 else
                 {
-                    Log::error((const char *)glewGetErrorString(glewInit_));
+                    std::cout << glewGetErrorString(glewInit_) << std::endl;
                 }
             }
             else
             {
-                Log::error("could not create window");
+                std::cout << "could not create window" << std::endl;
             }
         }
         else
         {
-            Log::error("could not init glfw");
+            std::cout << "could not init glfw" << std::endl;
         }
     }
 
@@ -78,10 +78,17 @@ namespace Manager
 
     void Window::loop()
     {
+        Graphics::Shader shader("src/shaders/triangle.vert.glsl", "src/shaders/triangle.frag.glsl");
+        Graphics::Triangle triangle;
+
+        triangle.buffer();
+        shader.use();
+
         glClearColor(0.2, 0.3, 0.3, 1.0);
         while (!glfwWindowShouldClose(window_))
         {
             glClear(GL_COLOR_BUFFER_BIT);
+            triangle.draw();
             glfwSwapBuffers(window_);
             glfwPollEvents();
         }
