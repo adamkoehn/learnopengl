@@ -8,7 +8,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <string>
 
-#include "../graphics/Rectangle.h"
+#include "../graphics/Cube.h"
 #include "../graphics/Shader.h"
 
 namespace Manager

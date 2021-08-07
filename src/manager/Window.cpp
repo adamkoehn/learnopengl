@@ -28,14 +28,15 @@ namespace Manager
             if (window_)
             {
                 glfwMakeContextCurrent(window_);
-                glfwSwapInterval(1);
 
                 glewInit_ = glewInit();
                 if (glewInit_ == GLEW_OK)
                 {
+                    glViewport(0, 0, 800, 600);
                     glfwSetKeyCallback(window_, keyPress);
                     glfwSetFramebufferSizeCallback(window_, sizeChange);
-                    glViewport(0, 0, 800, 600);
+                    glfwSwapInterval(1);
+                    glEnable(GL_DEPTH_TEST);
                 }
                 else
                 {
@@ -87,20 +88,16 @@ namespace Manager
         unsigned int uProjection;
 
         Graphics::Shader shader("src/shaders/rectangle.vert.glsl", "src/shaders/rectangle.frag.glsl");
-        Graphics::Rectangle rectangle;
+        Graphics::Cube cube;
 
-        rectangle.buffer();
-        rectangle.texture("textures/wall.jpg");
+        cube.buffer();
+        cube.texture("textures/wall.jpg");
         shader.use();
 
         uModel = glGetUniformLocation(shader.getId(), "model");
         uView = glGetUniformLocation(shader.getId(), "view");
         uProjection = glGetUniformLocation(shader.getId(), "projection");
         glUniform1i(glGetUniformLocation(shader.getId(), "texSampler"), 0);
-
-        model = glm::mat4(1.0);
-        model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0, 0.0, 0.0));
-        glUniformMatrix4fv(uModel, 1, GL_FALSE, glm::value_ptr(model));
 
         view = glm::mat4(1.0);
         view = glm::translate(view, glm::vec3(0.0, 0.0, -3.0));
@@ -112,8 +109,13 @@ namespace Manager
         glClearColor(0.2, 0.3, 0.3, 1.0);
         while (!glfwWindowShouldClose(window_))
         {
-            glClear(GL_COLOR_BUFFER_BIT);
-            rectangle.draw();
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            model = glm::mat4(1.0);
+            model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5, 1.0, 0.0));
+            glUniformMatrix4fv(uModel, 1, GL_FALSE, glm::value_ptr(model));
+            cube.draw();
+
             glfwSwapBuffers(window_);
             glfwPollEvents();
         }

@@ -1,5 +1,5 @@
-#ifndef INCLUDE_RECTANGLE_H
-#define INCLUDE_RECTANGLE_H
+#ifndef INCLUDE_CUBE_H
+#define INCLUDE_CUBE_H
 
 #include <GL/glew.h>
 #include <stb/stb_image.h>
@@ -8,7 +8,7 @@
 namespace Graphics
 {
 
-    class Rectangle
+    class Cube
     {
     public:
         void texture(const char *path);
