@@ -14,11 +14,10 @@ namespace Graphics
         Shader(const char *vert, const char *frag);
         ~Shader();
         void use() { glUseProgram(id_); }
+        unsigned int getId() { return id_; }
 
     private:
         unsigned int id_;
-        unsigned int vertex_;
-        unsigned int fragment_;
     };
 
 }

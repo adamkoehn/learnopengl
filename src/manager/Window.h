@@ -5,7 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <string>
 
-#include "../graphics/Triangle.h"
+#include "../graphics/Rectangle.h"
 #include "../graphics/Shader.h"
 
 namespace Manager

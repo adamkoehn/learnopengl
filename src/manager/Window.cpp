@@ -78,17 +78,20 @@ namespace Manager
 
     void Window::loop()
     {
-        Graphics::Shader shader("src/shaders/triangle.vert.glsl", "src/shaders/triangle.frag.glsl");
-        Graphics::Triangle triangle;
+        Graphics::Shader shader("src/shaders/rectangle.vert.glsl", "src/shaders/rectangle.frag.glsl");
+        Graphics::Rectangle rectangle;
 
-        triangle.buffer();
+        rectangle.buffer();
+        rectangle.texture("textures/wall.jpg");
         shader.use();
+
+        glUniform1i(glGetUniformLocation(shader.getId(), "texSampler"), 0);
 
         glClearColor(0.2, 0.3, 0.3, 1.0);
         while (!glfwWindowShouldClose(window_))
         {
             glClear(GL_COLOR_BUFFER_BIT);
-            triangle.draw();
+            rectangle.draw();
             glfwSwapBuffers(window_);
             glfwPollEvents();
         }

@@ -5,65 +5,69 @@ namespace Graphics
 
     Shader::Shader(const char *vert, const char *frag)
     {
+        unsigned int vertex;
+        unsigned int fragment;
         int success;
-        char *vertexCode;
-        char *fragmentCode;
+        char *code;
         std::streampos size;
-        std::ifstream vertexFile;
-        std::ifstream fragmentFile;
+        std::ifstream glsl;
         char log[512];
 
-        vertexFile.open(vert, std::ios::in | std::ios::ate);
-        if (vertexFile.is_open())
+        glsl.open(vert, std::ios::in | std::ios::ate);
+        if (glsl.is_open())
         {
-            size = vertexFile.tellg();
-            vertexCode = new char[size];
-            vertexFile.seekg(0, std::ios::beg);
-            vertexFile.read(vertexCode, size);
-            vertexFile.close();
+            size = glsl.tellg();
+            code = new char[size];
+            glsl.seekg(0, std::ios::beg);
+            glsl.read(code, size);
+            glsl.close();
         }
         else
         {
             std::cout << "could not open vertex glsl: " << vert << std::endl;
         }
 
-        fragmentFile.open(frag, std::ios::in | std::ios::ate);
-        if (fragmentFile.is_open())
+        vertex = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vertex, 1, &code, (int*)&size);
+        glCompileShader(vertex);
+        glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
+        if (!success)
         {
-            size = fragmentFile.tellg();
-            fragmentCode = new char[size];
-            fragmentFile.seekg(0, std::ios::beg);
-            fragmentFile.read(fragmentCode, size);
-            fragmentFile.close();
+            glGetShaderInfoLog(vertex, 512, NULL, log);
+            std::cout << "vertex shader: " << log << std::endl;
+        }
+
+        delete[] code;
+
+        glsl.open(frag, std::ios::in | std::ios::ate);
+        if (glsl.is_open())
+        {
+            size = glsl.tellg();
+            code = new char[size];
+            glsl.seekg(0, std::ios::beg);
+            glsl.read(code, size);
+            glsl.close();
         }
         else
         {
             std::cout << "could not open fragment glsl: " << frag << std::endl;
         }
 
-        vertex_ = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertex_, 1, &vertexCode, NULL);
-        glCompileShader(vertex_);
-        glGetShaderiv(vertex_, GL_COMPILE_STATUS, &success);
+        fragment = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragment, 1, &code, (int*)&size);
+        glCompileShader(fragment);
+        glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
         if (!success)
         {
-            glGetShaderInfoLog(vertex_, 512, NULL, log);
-            std::cout << "vertex shader: " << log << std::endl;
-        }
-
-        fragment_ = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragment_, 1, &fragmentCode, NULL);
-        glCompileShader(fragment_);
-        glGetShaderiv(fragment_, GL_COMPILE_STATUS, &success);
-        if (!success)
-        {
-            glGetShaderInfoLog(fragment_, 512, NULL, log);
+            glGetShaderInfoLog(fragment, 512, NULL, log);
             std::cout << "fragment shader: " << log << std::endl;
         }
 
+        delete[] code;
+
         id_ = glCreateProgram();
-        glAttachShader(id_, vertex_);
-        glAttachShader(id_, fragment_);
+        glAttachShader(id_, vertex);
+        glAttachShader(id_, fragment);
         glLinkProgram(id_);
         glGetProgramiv(id_, GL_LINK_STATUS, &success);
         if (!success)
@@ -72,10 +76,8 @@ namespace Graphics
             std::cout << "shader linker: " << log << std::endl;
         }
 
-        glDeleteShader(vertex_);
-        glDeleteShader(fragment_);
-        delete[] vertexCode;
-        delete[] fragmentCode;
+        glDeleteShader(fragment);
+        glDeleteShader(vertex);
     }
 
     Shader::~Shader()

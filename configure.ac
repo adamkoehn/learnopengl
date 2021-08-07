@@ -13,6 +13,7 @@ AC_PROG_CC
 # Checks for libraries.
 PKG_CHECK_MODULES([GLFW], [glfw3], [], [AC_MSG_ERROR([could not find glfw3])])
 PKG_CHECK_MODULES([GLEW], [glew], [], [AC_MSG_ERROR([could not find glew])])
+PKG_CHECK_MODULES([STB], [stb], [], [AC_MSG_ERROR([could not find stb])])
 
 # Checks for header files.
 
