@@ -24,11 +24,16 @@ namespace Manager
     private:
         Window();
         ~Window();
+        void processInput(float deltaTime);
 
         static Window *inst_;
         GLFWwindow *window_ = NULL;
         int glfwInit_;
         GLenum glewInit_;
+        float cameraSpeed;
+        glm::vec3 cameraPos;
+        glm::vec3 cameraFront;
+        glm::vec3 cameraUp;
     };
 
 }

@@ -83,9 +83,18 @@ namespace Manager
         glm::mat4 view;
         glm::mat4 projection;
 
+        float deltaTime;
+        float lastFrame;
+        float currentFrame;
+        unsigned int i;
         unsigned int uModel;
         unsigned int uView;
         unsigned int uProjection;
+
+        cameraSpeed = 2.5f;
+        cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+        cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+        cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
         Graphics::Shader shader("src/shaders/rectangle.vert.glsl", "src/shaders/rectangle.frag.glsl");
         Graphics::Cube cube;
@@ -99,26 +108,61 @@ namespace Manager
         uProjection = glGetUniformLocation(shader.getId(), "projection");
         glUniform1i(glGetUniformLocation(shader.getId(), "texSampler"), 0);
 
-        view = glm::mat4(1.0);
-        view = glm::translate(view, glm::vec3(0.0, 0.0, -3.0));
-        glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(view));
-
-        projection = glm::perspective(glm::radians(45.0), 800.0 / 600.0, 0.1, 100.0);
+        projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
         glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
+        glm::vec3 cubePositions[] = {
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(2.0f, 5.0f, -15.0f),
+            glm::vec3(-1.5f, -2.2f, -2.5f),
+            glm::vec3(-3.8f, -2.0f, -12.3f),
+            glm::vec3(2.4f, -0.4f, -3.5f),
+            glm::vec3(-1.7f, 3.0f, -7.5f),
+            glm::vec3(1.3f, -2.0f, -2.5f),
+            glm::vec3(1.5f, 2.0f, -2.5f),
+            glm::vec3(1.5f, 0.2f, -1.5f),
+            glm::vec3(-1.3f, 1.0f, -1.5f),
+        };
+
+        lastFrame = 0.0f;
         glClearColor(0.2, 0.3, 0.3, 1.0);
         while (!glfwWindowShouldClose(window_))
         {
+            currentFrame = glfwGetTime();
+            deltaTime = currentFrame - lastFrame;
+            lastFrame = currentFrame;
+
+            processInput(deltaTime);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            model = glm::mat4(1.0);
-            model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5, 1.0, 0.0));
-            glUniformMatrix4fv(uModel, 1, GL_FALSE, glm::value_ptr(model));
-            cube.draw();
+            view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+            glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(view));
+
+            for (i = 0; i < 10; i++)
+            {
+                model = glm::mat4(1.0f);
+                model = glm::translate(model, cubePositions[i]);
+                model = glm::rotate(model, currentFrame * glm::radians(50.0f), glm::vec3(0.7f, 0.9f, 0.2f));
+                glUniformMatrix4fv(uModel, 1, GL_FALSE, glm::value_ptr(model));
+                cube.draw();
+            }
 
             glfwSwapBuffers(window_);
             glfwPollEvents();
         }
+    }
+
+    void Window::processInput(float deltaTime)
+    {
+        float speed = cameraSpeed * deltaTime;
+        if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS)
+            cameraPos += speed * cameraFront;
+        if (glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS)
+            cameraPos -= speed * cameraFront;
+        if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS)
+            cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
+        if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS)
+            cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
     }
 
 }
