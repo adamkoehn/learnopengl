@@ -34,12 +34,12 @@ namespace Graphics
     {
         unsigned int vbo;
 
-        // 3x verticies, 3x color, 2x texture coords
+        // 3x verticies, 2x texture coords
         float verticies[] = {
-            0.5, 0.5, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0,   // top right
-            0.5, -0.5, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0,  // bottom right
-            -0.5, -0.5, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, // bottom left
-            -0.5, 0.5, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0,  // top left
+            0.5, 0.5, 0.0, 1.0, 1.0,   // top right
+            0.5, -0.5, 0.0, 1.0, 0.0,  // bottom right
+            -0.5, -0.5, 0.0, 0.0, 0.0, // bottom left
+            -0.5, 0.5, 0.0, 0.0, 1.0,  // top left
         };
 
         unsigned int indicies[] = {
@@ -57,12 +57,10 @@ namespace Graphics
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void *)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void *)0);
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void *)(sizeof(float) * 3));
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void *)(sizeof(float) * 3));
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*)(sizeof(float) * 6));
-        glEnableVertexAttribArray(2);
     }
 
     void Rectangle::draw()

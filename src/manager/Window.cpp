@@ -78,6 +78,8 @@ namespace Manager
 
     void Window::loop()
     {
+        unsigned int uniform;
+        glm::mat4 translation;
         Graphics::Shader shader("src/shaders/rectangle.vert.glsl", "src/shaders/rectangle.frag.glsl");
         Graphics::Rectangle rectangle;
 
@@ -85,13 +87,21 @@ namespace Manager
         rectangle.texture("textures/wall.jpg");
         shader.use();
 
+        uniform = glGetUniformLocation(shader.getId(), "transform");
         glUniform1i(glGetUniformLocation(shader.getId(), "texSampler"), 0);
 
         glClearColor(0.2, 0.3, 0.3, 1.0);
         while (!glfwWindowShouldClose(window_))
         {
             glClear(GL_COLOR_BUFFER_BIT);
+
+            translation = glm::mat4(1.0);
+            translation = glm::rotate(translation, (float)glfwGetTime(), glm::vec3(0.0, 0.0, 1.0));
+            glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(translation));
+
             rectangle.draw();
+
+
             glfwSwapBuffers(window_);
             glfwPollEvents();
         }
