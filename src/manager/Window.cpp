@@ -3,52 +3,6 @@
 namespace Manager
 {
 
-    static void keyPress(GLFWwindow *window, int key, int scancode, int action, int mods)
-    {
-        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-            glfwSetWindowShouldClose(window, GLFW_TRUE);
-    }
-
-    static void mouseMove(GLFWwindow *window, double xpos, double ypos)
-    {
-        Window *win = Window::instance();
-
-        if (win->firstMouse)
-        {
-            win->mouseX = xpos;
-            win->mouseY = ypos;
-            win->firstMouse = false;
-        }
-
-        const float sensitivity = 0.1f;
-        glm::vec3 direction;
-        float xoff;
-        float yoff;
-
-        xoff = xpos - win->mouseX;
-        yoff = win->mouseY - ypos;
-        win->mouseX = xpos;
-        win->mouseY = ypos;
-
-        xoff *= sensitivity;
-        yoff *= sensitivity;
-
-        win->yaw += xoff;
-        win->pitch += yoff;
-
-        if (win->pitch > 89.0f)
-            win->pitch = 89.0f;
-        if (win->pitch < -89.0f)
-            win->pitch = -89.0f;
-
-        direction = glm::vec3(
-            cos(glm::radians(win->yaw)) * cos(glm::radians(win->pitch)),
-            sin(glm::radians(win->pitch)),
-            sin(glm::radians(win->yaw)) * cos(glm::radians(win->pitch)));
-
-        win->cameraFront = glm::normalize(direction);
-    }
-
     static void sizeChange(GLFWwindow *window, int width, int height)
     {
         glViewport(0, 0, width, height);
@@ -58,11 +12,8 @@ namespace Manager
 
     Window::Window()
     {
-        firstMouse = true;
-        mouseX = 0;
-        mouseY = 0;
-        pitch = 0.0f;
-        yaw = -90.0f;
+        camera = new Camera();
+        input = new Input(camera);
 
         glfwInit_ = glfwInit();
         if (glfwInit_ == GLFW_TRUE)
@@ -79,8 +30,6 @@ namespace Manager
                 if (glewInit_ == GLEW_OK)
                 {
                     glViewport(0, 0, 800, 600);
-                    glfwSetKeyCallback(window_, keyPress);
-                    glfwSetCursorPosCallback(window_, mouseMove);
                     glfwSetFramebufferSizeCallback(window_, sizeChange);
                     glfwSwapInterval(1);
                     glEnable(GL_DEPTH_TEST);
@@ -103,6 +52,9 @@ namespace Manager
 
     Window::~Window()
     {
+        delete input;
+        delete camera;
+
         if (window_)
         {
             glfwDestroyWindow(window_);
@@ -127,7 +79,6 @@ namespace Manager
     void Window::loop()
     {
         glm::mat4 model;
-        glm::mat4 view;
         glm::mat4 projection;
 
         float deltaTime;
@@ -137,11 +88,6 @@ namespace Manager
         unsigned int uModel;
         unsigned int uView;
         unsigned int uProjection;
-
-        cameraSpeed = 2.5f;
-        cameraPos = glm::vec3(0.0f, 0.0f, 0.0f);
-        cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-        cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
         Graphics::Shader shader("src/shaders/rectangle.vert.glsl", "src/shaders/rectangle.frag.glsl");
         Graphics::Cube cube;
@@ -179,11 +125,10 @@ namespace Manager
             deltaTime = currentFrame - lastFrame;
             lastFrame = currentFrame;
 
-            processInput(deltaTime);
+            input->processInput(window_, deltaTime);;
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-            glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(view));
+            glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(camera->getView()));
 
             for (i = 0; i < 10; i++)
             {
@@ -197,19 +142,6 @@ namespace Manager
             glfwSwapBuffers(window_);
             glfwPollEvents();
         }
-    }
-
-    void Window::processInput(float deltaTime)
-    {
-        float speed = cameraSpeed * deltaTime;
-        if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS)
-            cameraPos += speed * cameraFront;
-        if (glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS)
-            cameraPos -= speed * cameraFront;
-        if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS)
-            cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
-        if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS)
-            cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
     }
 
 }

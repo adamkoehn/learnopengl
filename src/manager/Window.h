@@ -9,6 +9,8 @@
 #include <glm/gtx/string_cast.hpp>
 #include <string>
 
+#include "Input.h"
+#include "Camera.h"
 #include "../graphics/Cube.h"
 #include "../graphics/Shader.h"
 
@@ -36,10 +38,11 @@ namespace Manager
     private:
         Window();
         ~Window();
-        void processInput(float deltaTime);
 
         static Window *inst_;
         GLFWwindow *window_ = NULL;
+        Camera *camera;
+        Input *input;
         int glfwInit_;
         GLenum glewInit_;
     };
