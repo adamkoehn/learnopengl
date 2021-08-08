@@ -33,6 +33,11 @@ namespace Manager
                     glfwSetFramebufferSizeCallback(window_, sizeChange);
                     glfwSwapInterval(1);
                     glEnable(GL_DEPTH_TEST);
+
+                    shader = new Graphics::Shader("src/shaders/rectangle.vert.glsl", "src/shaders/rectangle.frag.glsl");
+                    uModel = glGetUniformLocation(shader->getId(), "model");
+                    uView = glGetUniformLocation(shader->getId(), "view");
+                    uProjection = glGetUniformLocation(shader->getId(), "projection");
                 }
                 else
                 {
@@ -64,6 +69,11 @@ namespace Manager
         {
             glfwTerminate();
         }
+
+        if (shader)
+        {
+            delete shader;
+        }
     }
 
     Window *Window::instance()
@@ -78,44 +88,17 @@ namespace Manager
 
     void Window::loop()
     {
-        glm::mat4 model;
         glm::mat4 projection;
 
         float deltaTime;
         float lastFrame;
         float currentFrame;
-        unsigned int i;
-        unsigned int uModel;
-        unsigned int uView;
-        unsigned int uProjection;
 
-        Graphics::Shader shader("src/shaders/rectangle.vert.glsl", "src/shaders/rectangle.frag.glsl");
-        Graphics::Cube cube;
-
-        cube.buffer();
-        cube.texture("textures/wall.jpg");
-        shader.use();
-
-        uModel = glGetUniformLocation(shader.getId(), "model");
-        uView = glGetUniformLocation(shader.getId(), "view");
-        uProjection = glGetUniformLocation(shader.getId(), "projection");
-        glUniform1i(glGetUniformLocation(shader.getId(), "texSampler"), 0);
+        shader->use();
+        glUniform1i(glGetUniformLocation(shader->getId(), "texSampler"), 0);
 
         projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
         glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
-
-        glm::vec3 cubePositions[] = {
-            glm::vec3(0.0f, 0.0f, -4.0f),
-            glm::vec3(2.0f, 5.0f, -15.0f),
-            glm::vec3(-1.5f, -2.2f, -2.5f),
-            glm::vec3(-3.8f, -2.0f, -12.3f),
-            glm::vec3(2.4f, -0.4f, -3.5f),
-            glm::vec3(-1.7f, 3.0f, -7.5f),
-            glm::vec3(1.3f, -2.0f, -2.5f),
-            glm::vec3(1.5f, 2.0f, -2.5f),
-            glm::vec3(1.5f, 0.2f, -1.5f),
-            glm::vec3(-1.3f, 1.0f, -1.5f),
-        };
 
         lastFrame = 0.0f;
         glClearColor(0.2, 0.3, 0.3, 1.0);
@@ -125,19 +108,12 @@ namespace Manager
             deltaTime = currentFrame - lastFrame;
             lastFrame = currentFrame;
 
-            input->processInput(window_, deltaTime);;
+            input->processInput(window_, deltaTime);
+            scene->update(deltaTime);
+
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
             glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(camera->getView()));
-
-            for (i = 0; i < 10; i++)
-            {
-                model = glm::mat4(1.0f);
-                model = glm::translate(model, cubePositions[i]);
-                model = glm::rotate(model, currentFrame * glm::radians(50.0f), glm::vec3(0.7f, 0.9f, 0.2f));
-                glUniformMatrix4fv(uModel, 1, GL_FALSE, glm::value_ptr(model));
-                cube.draw();
-            }
+            scene->render();
 
             glfwSwapBuffers(window_);
             glfwPollEvents();

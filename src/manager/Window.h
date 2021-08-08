@@ -13,6 +13,7 @@
 #include "Camera.h"
 #include "../graphics/Cube.h"
 #include "../graphics/Shader.h"
+#include "../scene/Scene.h"
 
 namespace Manager
 {
@@ -21,6 +22,8 @@ namespace Manager
     {
     public:
         static Window *instance();
+        void setScene(Scene::Scene *s) { scene = s; }
+        unsigned int getUModel() { return uModel; }
         void loop();
         bool isReady() { return glfwInit_ == GLFW_TRUE && glewInit_ == GLEW_OK && window_ != NULL; }
 
@@ -45,6 +48,11 @@ namespace Manager
         Input *input;
         int glfwInit_;
         GLenum glewInit_;
+        Scene::Scene *scene;
+        Graphics::Shader *shader;
+        unsigned int uModel;
+        unsigned int uView;
+        unsigned int uProjection;
     };
 
 }
