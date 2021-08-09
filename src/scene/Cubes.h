@@ -8,6 +8,8 @@
 #include <GL/glew.h>
 
 #include "../graphics/Cube.h"
+#include "../graphics/Shader.h"
+#include "../manager/Camera.h"
 #include "Scene.h"
 
 namespace Scene
@@ -16,16 +18,19 @@ namespace Scene
     class Cubes : public Scene
     {
     public:
-        Cubes(unsigned int uModel, unsigned int numCubes);
+        Cubes(unsigned int numCubes);
         ~Cubes();
         void update(float deltaTime);
-        void render();
+        void render(Manager::Camera *camera);
 
     private:
-        Graphics::Cube *cube;
-        unsigned int u;
-        unsigned int n;
-        glm::mat4 *cubes;
+        Graphics::Cube *cube_;
+        Graphics::Shader *shader_;
+        unsigned int model_;
+        unsigned int view_;
+        unsigned int projection_;
+        unsigned int numCubes_;
+        glm::mat4 *transforms_;
     };
 
 }

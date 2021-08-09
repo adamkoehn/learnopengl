@@ -22,21 +22,11 @@ namespace Manager
     {
     public:
         static Window *instance();
-        void setScene(Scene::Scene *s) { scene = s; }
-        unsigned int getUModel() { return uModel; }
+        static void destroy();
+
+        void setScene(Scene::Scene *scene) { scene_ = scene; }
         void loop();
         bool isReady() { return glfwInit_ == GLFW_TRUE && glewInit_ == GLEW_OK && window_ != NULL; }
-
-        bool firstMouse;
-        float cameraSpeed;
-        float mouseX;
-        float mouseY;
-        float yaw;
-        float pitch;
-        glm::vec3 cameraPos;
-        glm::vec3 cameraFront;
-        glm::vec3 cameraRight;
-        glm::vec3 cameraUp;
 
     private:
         Window();
@@ -44,15 +34,11 @@ namespace Manager
 
         static Window *inst_;
         GLFWwindow *window_ = NULL;
-        Camera *camera;
-        Input *input;
+        Input *input_;
+        Camera *camera_;
         int glfwInit_;
         GLenum glewInit_;
-        Scene::Scene *scene;
-        Graphics::Shader *shader;
-        unsigned int uModel;
-        unsigned int uView;
-        unsigned int uProjection;
+        Scene::Scene *scene_;
     };
 
 }

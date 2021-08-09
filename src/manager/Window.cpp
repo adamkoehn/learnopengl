@@ -12,8 +12,8 @@ namespace Manager
 
     Window::Window()
     {
-        camera = new Camera();
-        input = new Input(camera);
+        camera_ = new Camera();
+        input_ = new Input(camera_);
 
         glfwInit_ = glfwInit();
         if (glfwInit_ == GLFW_TRUE)
@@ -33,11 +33,6 @@ namespace Manager
                     glfwSetFramebufferSizeCallback(window_, sizeChange);
                     glfwSwapInterval(1);
                     glEnable(GL_DEPTH_TEST);
-
-                    shader = new Graphics::Shader("src/shaders/rectangle.vert.glsl", "src/shaders/rectangle.frag.glsl");
-                    uModel = glGetUniformLocation(shader->getId(), "model");
-                    uView = glGetUniformLocation(shader->getId(), "view");
-                    uProjection = glGetUniformLocation(shader->getId(), "projection");
                 }
                 else
                 {
@@ -57,8 +52,8 @@ namespace Manager
 
     Window::~Window()
     {
-        delete input;
-        delete camera;
+        delete input_;
+        delete camera_;
 
         if (window_)
         {
@@ -68,11 +63,6 @@ namespace Manager
         if (glfwInit_ == GLFW_TRUE)
         {
             glfwTerminate();
-        }
-
-        if (shader)
-        {
-            delete shader;
         }
     }
 
@@ -86,6 +76,15 @@ namespace Manager
         return inst_;
     }
 
+    void Window::destroy()
+    {
+        if (inst_)
+        {
+            delete inst_;
+            inst_ = NULL;
+        }
+    }
+
     void Window::loop()
     {
         glm::mat4 projection;
@@ -93,12 +92,6 @@ namespace Manager
         float deltaTime;
         float lastFrame;
         float currentFrame;
-
-        shader->use();
-        glUniform1i(glGetUniformLocation(shader->getId(), "texSampler"), 0);
-
-        projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-        glUniformMatrix4fv(uProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
         lastFrame = 0.0f;
         glClearColor(0.2, 0.3, 0.3, 1.0);
@@ -108,12 +101,11 @@ namespace Manager
             deltaTime = currentFrame - lastFrame;
             lastFrame = currentFrame;
 
-            input->processInput(window_, deltaTime);
-            scene->update(deltaTime);
+            input_->processInput(window_, deltaTime);
+            scene_->update(deltaTime);
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(camera->getView()));
-            scene->render();
+            scene_->render(camera_);
 
             glfwSwapBuffers(window_);
             glfwPollEvents();

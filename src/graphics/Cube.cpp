@@ -23,6 +23,7 @@ namespace Graphics
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
             glGenerateMipmap(GL_TEXTURE_2D);
             stbi_image_free(data);
+            textured = true;
         }
         else
         {
@@ -32,8 +33,6 @@ namespace Graphics
 
     void Cube::buffer()
     {
-        unsigned int vbo;
-
         float vertices[] = {
             -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
             0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
@@ -81,22 +80,31 @@ namespace Graphics
         glGenVertexArrays(1, &vao_);
         glBindVertexArray(vao_);
 
-        glGenBuffers(1, &vbo);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glGenBuffers(1, &vbo_);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo_);
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void *)0);
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void *)(sizeof(float) * 3));
         glEnableVertexAttribArray(1);
+
+        buffered = true;
     }
 
     void Cube::draw()
     {
-        glBindTexture(GL_TEXTURE_2D, texture_);
-        glBindVertexArray(vao_);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
+        if (textured)
+        {
+            glBindTexture(GL_TEXTURE_2D, texture_);
+        }
+
+        if (buffered)
+        {
+            glBindVertexArray(vao_);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+            glBindVertexArray(0);
+        }
     }
 
 }

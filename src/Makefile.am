@@ -1,1 +1,1 @@
-SUBDIRS = cubes
+SUBDIRS = cubes lighting
