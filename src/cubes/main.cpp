@@ -1,5 +1,5 @@
-#include "manager/Window.h"
-#include "scene/Cubes.h"
+#include "../manager/Window.h"
+#include "../scene/Cubes.h"
 
 int main(int argc, char *argv[])
 {

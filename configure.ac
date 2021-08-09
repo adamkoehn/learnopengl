@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.69])
 AC_INIT([tutorial], [0.1.0], [adamkoehn1@gmail.com])
-AC_CONFIG_SRCDIR([src/main.cpp])
+AC_CONFIG_SRCDIR([src/cubes/main.cpp])
 AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
@@ -25,5 +25,6 @@ AC_CHECK_HEADER_STDBOOL
 
 AM_INIT_AUTOMAKE([subdir-objects])
 AC_CONFIG_FILES([Makefile
-                 src/Makefile])
+                 src/Makefile
+                 src/cubes/Makefile])
 AC_OUTPUT
