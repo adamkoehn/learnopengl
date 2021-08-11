@@ -8,10 +8,9 @@
 namespace Graphics
 {
 
-    class Cube
+    class TexturedCube
     {
     public:
-        Cube() : textured(false), buffered(false) {}
         void texture(const char *path);
         void buffer();
         void draw();
@@ -20,10 +19,7 @@ namespace Graphics
     private:
         unsigned int vao_;
         unsigned int vbo_;
-        unsigned int ebo_;
         unsigned int texture_;
-        bool textured;
-        bool buffered;
     };
 
 }

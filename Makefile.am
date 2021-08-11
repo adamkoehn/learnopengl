@@ -1,1 +1,1 @@
-SUBDIRS = src/cubes
+SUBDIRS = src

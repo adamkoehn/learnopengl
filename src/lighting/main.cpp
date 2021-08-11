@@ -1,15 +1,18 @@
+#include "../scene/Lighting.h"
 #include "../manager/Window.h"
 
 int main(int argc, char *argv[])
 {
-    Manager::Window *window = Manager::Window::instance();
+    Scene::Lighting *lighting;
+
+    Manager::Window *window = new Manager::Window();
     if (window->isReady())
     {
-        // window->setScene();
-        // window->setShader();
+        lighting = new Scene::Lighting();
+        window->setScene(lighting);
         window->loop();
     }
+    delete window;
 
-    Manager::Window::destroy();
     return 0;
 }

@@ -11,7 +11,7 @@
 
 #include "Input.h"
 #include "Camera.h"
-#include "../graphics/Cube.h"
+#include "../graphics/TexturedCube.h"
 #include "../graphics/Shader.h"
 #include "../scene/Scene.h"
 
@@ -21,18 +21,13 @@ namespace Manager
     class Window
     {
     public:
-        static Window *instance();
-        static void destroy();
-
+        Window();
+        ~Window();
         void setScene(Scene::Scene *scene) { scene_ = scene; }
         void loop();
         bool isReady() { return glfwInit_ == GLFW_TRUE && glewInit_ == GLEW_OK && window_ != NULL; }
 
     private:
-        Window();
-        ~Window();
-
-        static Window *inst_;
         GLFWwindow *window_ = NULL;
         Input *input_;
         Camera *camera_;

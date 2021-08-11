@@ -5,8 +5,8 @@
 int main(int argc, char *argv[])
 {
     Scene::Cubes *cubes;
-
-    Manager::Window *window = Manager::Window::instance();
+    
+    Manager::Window *window = new Manager::Window();
     if (window->isReady())
     {
         cubes = new Scene::Cubes(30);
@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
         window->loop();
         delete cubes;
     }
-    Manager::Window::destroy();
+    delete window;    
     
     return 0;
 }

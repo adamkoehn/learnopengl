@@ -26,5 +26,6 @@ AC_CHECK_HEADER_STDBOOL
 AM_INIT_AUTOMAKE([subdir-objects])
 AC_CONFIG_FILES([Makefile
                  src/Makefile
-                 src/cubes/Makefile])
+                 src/cubes/Makefile
+                 src/lighting/Makefile])
 AC_OUTPUT

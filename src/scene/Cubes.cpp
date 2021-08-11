@@ -19,7 +19,7 @@ namespace Scene
         projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
         glUniformMatrix4fv(projection_, 1, GL_FALSE, glm::value_ptr(projection));
 
-        cube_ = new Graphics::Cube();
+        cube_ = new Graphics::TexturedCube();
         cube_->buffer();
         cube_->texture("textures/wall.jpg");
 

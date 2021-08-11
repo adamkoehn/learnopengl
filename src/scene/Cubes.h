@@ -7,7 +7,7 @@
 #include <glm/gtc/random.hpp>
 #include <GL/glew.h>
 
-#include "../graphics/Cube.h"
+#include "../graphics/TexturedCube.h"
 #include "../graphics/Shader.h"
 #include "../manager/Camera.h"
 #include "Scene.h"
@@ -24,7 +24,7 @@ namespace Scene
         void render(Manager::Camera *camera);
 
     private:
-        Graphics::Cube *cube_;
+        Graphics::TexturedCube *cube_;
         Graphics::Shader *shader_;
         unsigned int model_;
         unsigned int view_;

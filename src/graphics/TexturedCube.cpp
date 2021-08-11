@@ -1,9 +1,9 @@
-#include "Cube.h"
+#include "TexturedCube.h"
 
 namespace Graphics
 {
 
-    void Cube::texture(const char *path)
+    void TexturedCube::texture(const char *path)
     {
         int width;
         int height;
@@ -23,7 +23,6 @@ namespace Graphics
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
             glGenerateMipmap(GL_TEXTURE_2D);
             stbi_image_free(data);
-            textured = true;
         }
         else
         {
@@ -31,7 +30,7 @@ namespace Graphics
         }
     }
 
-    void Cube::buffer()
+    void TexturedCube::buffer()
     {
         float vertices[] = {
             -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -88,23 +87,14 @@ namespace Graphics
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void *)(sizeof(float) * 3));
         glEnableVertexAttribArray(1);
-
-        buffered = true;
     }
 
-    void Cube::draw()
+    void TexturedCube::draw()
     {
-        if (textured)
-        {
-            glBindTexture(GL_TEXTURE_2D, texture_);
-        }
-
-        if (buffered)
-        {
-            glBindVertexArray(vao_);
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-            glBindVertexArray(0);
-        }
+        glBindTexture(GL_TEXTURE_2D, texture_);
+        glBindVertexArray(vao_);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
     }
 
 }

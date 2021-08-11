@@ -8,8 +8,6 @@ namespace Manager
         glViewport(0, 0, width, height);
     }
 
-    Window *Window::inst_ = NULL;
-
     Window::Window()
     {
         camera_ = new Camera();
@@ -66,35 +64,14 @@ namespace Manager
         }
     }
 
-    Window *Window::instance()
-    {
-        if (inst_ == NULL)
-        {
-            inst_ = new Window();
-        }
-
-        return inst_;
-    }
-
-    void Window::destroy()
-    {
-        if (inst_)
-        {
-            delete inst_;
-            inst_ = NULL;
-        }
-    }
-
     void Window::loop()
     {
-        glm::mat4 projection;
-
         float deltaTime;
         float lastFrame;
         float currentFrame;
 
         lastFrame = 0.0f;
-        glClearColor(0.2, 0.3, 0.3, 1.0);
+        glClearColor(0.1, 0.1, 0.1, 1.0);
         while (!glfwWindowShouldClose(window_))
         {
             currentFrame = glfwGetTime();
