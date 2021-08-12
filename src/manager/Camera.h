@@ -18,6 +18,7 @@ namespace Manager
         void moveCameraRight(float deltaTime);
         void setDirection(float pitch, float yaw);
         glm::mat4 getView();
+        glm::vec3 getPosition() { return position_; }
         float getPitch() { return pitch_; }
         float getYaw() { return yaw_; }
     

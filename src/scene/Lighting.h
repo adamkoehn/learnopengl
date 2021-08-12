@@ -30,6 +30,7 @@ namespace Scene
         unsigned int lightColor_;
         unsigned int objectColor_;
         unsigned int lightPos_;
+        unsigned int viewPos_;
         float lightAngle_;
         Graphics::Shader *lightShader_;
         Graphics::Shader *cubeShader_;

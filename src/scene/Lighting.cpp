@@ -33,6 +33,7 @@ namespace Scene
         lightColor_ = glGetUniformLocation(cubeShader_->getId(), "lightColor");
         objectColor_ = glGetUniformLocation(cubeShader_->getId(), "objectColor");
         lightPos_ = glGetUniformLocation(cubeShader_->getId(), "lightPos");
+        viewPos_ = glGetUniformLocation(cubeShader_->getId(), "viewPos");
         glUniformMatrix4fv(cubeProjection_, 1, GL_FALSE, glm::value_ptr(projection));
         glUniform3fv(lightColor_, 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
         glUniform3fv(objectColor_, 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.31f)));
@@ -79,6 +80,7 @@ namespace Scene
         glUniformMatrix4fv(cubeView_, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(cubeModel_, 1, GL_FALSE, glm::value_ptr(cubeTransform_));
         glUniform3fv(lightPos_, 1, glm::value_ptr(lightLocation_));
+        glUniform3fv(viewPos_, 1, glm::value_ptr(camera->getPosition()));
         cube_->draw();
     }
 
