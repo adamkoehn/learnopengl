@@ -9,7 +9,7 @@ namespace Scene
         cubeShader_ = new Graphics::Shader("src/shaders/lighting_cube.vert.glsl", "src/shaders/lighting_cube.frag.glsl");
         cube_ = new Graphics::NormalCube();
         cube_->buffer();
-        light_ = new Graphics::Light(cube_);
+        lightCube_ = new Graphics::Light(cube_);
         lightAngle_ = 0;
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
@@ -30,14 +30,23 @@ namespace Scene
         cubeProjection_ = glGetUniformLocation(cubeShader_->getId(), "projection");
         cubeView_ = glGetUniformLocation(cubeShader_->getId(), "view");
         cubeModel_ = glGetUniformLocation(cubeShader_->getId(), "model");
-        lightColor_ = glGetUniformLocation(cubeShader_->getId(), "lightColor");
-        objectColor_ = glGetUniformLocation(cubeShader_->getId(), "objectColor");
-        lightPos_ = glGetUniformLocation(cubeShader_->getId(), "lightPos");
         viewPos_ = glGetUniformLocation(cubeShader_->getId(), "viewPos");
+        material_.ambient_ = glGetUniformLocation(cubeShader_->getId(), "material.ambient");
+        material_.diffuse_ = glGetUniformLocation(cubeShader_->getId(), "material.diffuse");
+        material_.specular_ = glGetUniformLocation(cubeShader_->getId(), "material.specular");
+        material_.shininess_ = glGetUniformLocation(cubeShader_->getId(), "material.shininess");
+        light_.position_ = glGetUniformLocation(cubeShader_->getId(), "light.position");
+        light_.ambient_ = glGetUniformLocation(cubeShader_->getId(), "light.ambient");
+        light_.diffuse_ = glGetUniformLocation(cubeShader_->getId(), "light.diffuse");
+        light_.specular_ = glGetUniformLocation(cubeShader_->getId(), "light.specular");
         glUniformMatrix4fv(cubeProjection_, 1, GL_FALSE, glm::value_ptr(projection));
-        glUniform3fv(lightColor_, 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
-        glUniform3fv(objectColor_, 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.31f)));
-        glUniform3fv(lightPos_, 1, glm::value_ptr(lightLocation_));
+        glUniform3fv(material_.ambient_, 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.31f)));
+        glUniform3fv(material_.diffuse_, 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.31f)));
+        glUniform3fv(material_.specular_, 1, glm::value_ptr(glm::vec3(0.5f, 0.5f, 0.5f)));
+        glUniform1f(material_.shininess_, 32.0f);
+        glUniform3fv(light_.ambient_, 1, glm::value_ptr(glm::vec3(0.2f, 0.2f, 0.2f)));
+        glUniform3fv(light_.diffuse_, 1, glm::value_ptr(glm::vec3(0.5f, 0.5f, 0.5f)));
+        glUniform3fv(light_.specular_, 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
 
         cubeTransform_ = glm::mat4(1.0f);
         cubeTransform_ = glm::translate(cubeTransform_, glm::vec3(0.0f, 0.0f, 0.0f));
@@ -48,7 +57,7 @@ namespace Scene
     {
         delete lightShader_;
         delete cubeShader_;
-        delete light_;
+        delete lightCube_;
         delete cube_;
     }
 
@@ -74,12 +83,12 @@ namespace Scene
         lightShader_->use();
         glUniformMatrix4fv(lightView_, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(lightModel_, 1, GL_FALSE, glm::value_ptr(lightTransform_));
-        light_->draw();
+        lightCube_->draw();
 
         cubeShader_->use();
         glUniformMatrix4fv(cubeView_, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(cubeModel_, 1, GL_FALSE, glm::value_ptr(cubeTransform_));
-        glUniform3fv(lightPos_, 1, glm::value_ptr(lightLocation_));
+        glUniform3fv(light_.position_, 1, glm::value_ptr(lightLocation_));
         glUniform3fv(viewPos_, 1, glm::value_ptr(camera->getPosition()));
         cube_->draw();
     }

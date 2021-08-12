@@ -27,10 +27,19 @@ namespace Scene
         unsigned int cubeView_;
         unsigned int lightProjection_;
         unsigned int cubeProjection_;
-        unsigned int lightColor_;
-        unsigned int objectColor_;
-        unsigned int lightPos_;
         unsigned int viewPos_;
+        struct {
+            unsigned int ambient_;
+            unsigned int diffuse_;
+            unsigned int specular_;
+            unsigned int shininess_;
+        } material_;
+        struct {
+            unsigned int position_;
+            unsigned int ambient_;
+            unsigned int diffuse_;
+            unsigned int specular_;
+        } light_;
         float lightAngle_;
         Graphics::Shader *lightShader_;
         Graphics::Shader *cubeShader_;
@@ -38,7 +47,7 @@ namespace Scene
         glm::mat4 lightTransform_;
         glm::vec3 lightLocation_;
         Graphics::NormalCube *cube_;
-        Graphics::Light *light_;
+        Graphics::Light *lightCube_;
     };
 
 }
