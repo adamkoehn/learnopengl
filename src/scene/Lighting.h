@@ -29,10 +29,13 @@ namespace Scene
         unsigned int cubeProjection_;
         unsigned int lightColor_;
         unsigned int objectColor_;
+        unsigned int lightPos_;
+        float lightAngle_;
         Graphics::Shader *lightShader_;
         Graphics::Shader *cubeShader_;
         glm::mat4 cubeTransform_;
         glm::mat4 lightTransform_;
+        glm::vec3 lightLocation_;
         Graphics::NormalCube *cube_;
         Graphics::Light *light_;
     };
