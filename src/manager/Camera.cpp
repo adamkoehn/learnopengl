@@ -5,6 +5,11 @@ namespace Manager
 
     Camera::Camera()
     {
+        this->reset();
+    }
+
+    void Camera::reset()
+    {
         position_ = glm::vec3(0.0f, 0.0f, 5.0f);
         front_ = glm::vec3(0.0f, 0.0f, -1.0f);
         up_ = glm::vec3(0.0f, 1.0f, 0.0f);

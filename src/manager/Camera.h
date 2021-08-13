@@ -11,6 +11,7 @@ namespace Manager
     {
     public:
         Camera();
+        void reset();
         void moveCameraForward(float deltaTime);
         void moveCameraBack(float deltaTime);
         void moveCameraLeft(float deltaTime);

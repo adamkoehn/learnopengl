@@ -44,6 +44,11 @@ namespace Manager
             yoff *= mouseSens;
             camera_->setDirection(camera_->getPitch() + yoff, camera_->getYaw() + xoff);
         }
+
+        if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+        {
+            camera_->reset();
+        }
     }
 
 }
