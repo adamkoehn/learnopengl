@@ -8,6 +8,7 @@ namespace Manager
         mouseSens = 0.1f;
         mousex = 0.0f;
         mousey = 0.0f;
+        firstMouse = true;
     }
 
     void Input::processInput(GLFWwindow *window, float deltaTime)

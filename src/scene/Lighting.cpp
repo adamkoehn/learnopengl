@@ -7,8 +7,9 @@ namespace Scene
     {
         lightShader_ = new Graphics::Shader("src/shaders/lighting_light.vert.glsl", "src/shaders/lighting_light.frag.glsl");
         cubeShader_ = new Graphics::Shader("src/shaders/lighting_cube.vert.glsl", "src/shaders/lighting_cube.frag.glsl");
-        cube_ = new Graphics::NormalCube();
+        cube_ = new Graphics::TexturedCube();
         cube_->buffer();
+        cube_->texture("textures/crate.png", "textures/crate_specular.png");
         lightCube_ = new Graphics::Light(cube_);
         lightAngle_ = 0;
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
@@ -31,8 +32,6 @@ namespace Scene
         cubeView_ = glGetUniformLocation(cubeShader_->getId(), "view");
         cubeModel_ = glGetUniformLocation(cubeShader_->getId(), "model");
         viewPos_ = glGetUniformLocation(cubeShader_->getId(), "viewPos");
-        material_.ambient_ = glGetUniformLocation(cubeShader_->getId(), "material.ambient");
-        material_.diffuse_ = glGetUniformLocation(cubeShader_->getId(), "material.diffuse");
         material_.specular_ = glGetUniformLocation(cubeShader_->getId(), "material.specular");
         material_.shininess_ = glGetUniformLocation(cubeShader_->getId(), "material.shininess");
         light_.position_ = glGetUniformLocation(cubeShader_->getId(), "light.position");
@@ -40,9 +39,8 @@ namespace Scene
         light_.diffuse_ = glGetUniformLocation(cubeShader_->getId(), "light.diffuse");
         light_.specular_ = glGetUniformLocation(cubeShader_->getId(), "light.specular");
         glUniformMatrix4fv(cubeProjection_, 1, GL_FALSE, glm::value_ptr(projection));
-        glUniform3fv(material_.ambient_, 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.31f)));
-        glUniform3fv(material_.diffuse_, 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.31f)));
-        glUniform3fv(material_.specular_, 1, glm::value_ptr(glm::vec3(0.5f, 0.5f, 0.5f)));
+        glUniform1i(glGetUniformLocation(cubeShader_->getId(), "material.diffuse"), 0);
+        glUniform1i(glGetUniformLocation(cubeShader_->getId(), "material.specular"), 1);
         glUniform1f(material_.shininess_, 32.0f);
         glUniform3fv(light_.ambient_, 1, glm::value_ptr(glm::vec3(0.2f, 0.2f, 0.2f)));
         glUniform3fv(light_.diffuse_, 1, glm::value_ptr(glm::vec3(0.5f, 0.5f, 0.5f)));

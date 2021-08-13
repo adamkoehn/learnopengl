@@ -6,7 +6,7 @@
 
 #include "Scene.h"
 #include "../graphics/Shader.h"
-#include "../graphics/NormalCube.h"
+#include "../graphics/TexturedCube.h"
 #include "../graphics/Light.h"
 
 namespace Scene
@@ -29,8 +29,6 @@ namespace Scene
         unsigned int cubeProjection_;
         unsigned int viewPos_;
         struct {
-            unsigned int ambient_;
-            unsigned int diffuse_;
             unsigned int specular_;
             unsigned int shininess_;
         } material_;
@@ -46,7 +44,7 @@ namespace Scene
         glm::mat4 cubeTransform_;
         glm::mat4 lightTransform_;
         glm::vec3 lightLocation_;
-        Graphics::NormalCube *cube_;
+        Graphics::TexturedCube *cube_;
         Graphics::Light *lightCube_;
     };
 

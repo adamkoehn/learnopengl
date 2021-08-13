@@ -21,7 +21,7 @@ namespace Scene
 
         cube_ = new Graphics::TexturedCube();
         cube_->buffer();
-        cube_->texture("textures/wall.jpg");
+        cube_->texture("textures/crate.png", "textures/crate_specular.png");
 
         transforms_ = new glm::mat4[numCubes];
         for (i = 0; i < numCubes; i++)

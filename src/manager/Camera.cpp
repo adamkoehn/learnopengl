@@ -5,7 +5,7 @@ namespace Manager
 
     Camera::Camera()
     {
-        position_ = glm::vec3(0.0f, 0.0f, 0.0f);
+        position_ = glm::vec3(0.0f, 0.0f, 5.0f);
         front_ = glm::vec3(0.0f, 0.0f, -1.0f);
         up_ = glm::vec3(0.0f, 1.0f, 0.0f);
         speed_ = 2.5f;

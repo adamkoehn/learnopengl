@@ -1,7 +1,7 @@
 #ifndef INCLUDE_LIGHT_H
 #define INCLUDE_LIGHT_H
 
-#include "NormalCube.h"
+#include "TexturedCube.h"
 
 namespace Graphics
 {
@@ -9,11 +9,11 @@ namespace Graphics
     class Light
     {
     public:
-        Light(NormalCube *cube);
+        Light(TexturedCube *cube);
         void draw();
 
     private:
-        NormalCube *cube_;
+        TexturedCube *cube_;
         unsigned int vao_;
     };
 
